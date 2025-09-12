@@ -1,0 +1,193 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fancy Submission Portal</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      height: 100vh;
+      background: #f0f2f5;
+    }
+    .sidebar {
+      width: 200px;
+      background: #2c3e50;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .sidebar button {
+      background: #2980b9;
+      border: none;
+      color: white;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .main {
+      flex: 1;
+      padding: 40px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .hidden { display: none; }
+    .entry {
+      background: #ecf0f1;
+      padding: 10px;
+      margin: 10px 0;
+      border-left: 4px solid #3498db;
+    }
+    .checkbox-group {
+      margin-top: 20px;
+    }
+    label { display: block; margin-bottom: 10px; }
+    #feedbackModal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      z-index: 1000;
+      border-radius: 10px;
+    }
+    #overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Menu</h2>
+    <button onclick="showLogin()">Admin Login</button>
+    <button onclick="openFeedback()">Send Feedback</button>
+  </div>  <div class="main">
+    <div class="card" id="formPage">
+      <h2>Choose Your Interests</h2>
+      <div class="checkbox-group">
+        <label><input type="checkbox" value="Dogs" /> Dogs</label>
+        <label><input type="checkbox" value="Cats" /> Cats</label>
+        <label><input type="checkbox" value="Birds" /> Birds</label>
+        <label><input type="checkbox" value="Fish" /> Fish</label>
+      </div>
+      <button onclick="submitCheckboxes()">Submit</button>
+    </div><div class="card hidden" id="loginPage">
+  <h2>Admin Login</h2>
+  <input type="text" id="loginUser" placeholder="Username" />
+  <input type="password" id="loginPass" placeholder="Password" />
+  <button onclick="login()">Login</button>
+</div>
+
+<div class="card hidden" id="dashboard">
+  <h2>Submitted Entries</h2>
+  <div id="entries"></div>
+  <button onclick="logout()">Logout</button>
+</div>
+
+  </div>  <!-- Feedback Modal -->  <div id="overlay" class="hidden" onclick="closeFeedback()"></div>
+  <div id="feedbackModal" class="hidden">
+    <h3>Send Feedback</h3>
+    <input type="text" id="feedbackName" placeholder="Your Name" />
+    <textarea id="feedbackMessage" placeholder="Your Feedback"></textarea>
+    <button onclick="submitFeedback()">Send</button>
+    <button onclick="closeFeedback()">Close</button>
+  </div>  <script>
+    const USERNAME = "admin";
+    const PASSWORD = "password123";
+    let loggedIn = false;
+    let submissions = [];
+    let feedbacks = [];
+
+    function submitCheckboxes() {
+      const checkboxes = document.querySelectorAll("input[type='checkbox']:checked");
+      const selected = Array.from(checkboxes).map(cb => cb.value);
+      if (selected.length > 0) {
+        submissions.push({ type: 'checkbox', values: selected });
+        alert("Submitted successfully!");
+        checkboxes.forEach(cb => cb.checked = false);
+      } else {
+        alert("Please select at least one option.");
+      }
+    }
+
+    function showLogin() {
+      document.getElementById("formPage").classList.add("hidden");
+      document.getElementById("dashboard").classList.add("hidden");
+      document.getElementById("loginPage").classList.remove("hidden");
+    }
+
+    function login() {
+      const user = document.getElementById("loginUser").value;
+      const pass = document.getElementById("loginPass").value;
+      if (user === USERNAME && pass === PASSWORD) {
+        loggedIn = true;
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+        showEntries();
+      } else {
+        alert("Incorrect login details.");
+      }
+    }
+
+    function logout() {
+      loggedIn = false;
+      document.getElementById("dashboard").classList.add("hidden");
+      document.getElementById("formPage").classList.remove("hidden");
+    }
+
+    function showEntries() {
+      const entriesDiv = document.getElementById("entries");
+      entriesDiv.innerHTML = "";
+      submissions.forEach(entry => {
+        if (entry.type === 'checkbox') {
+          entriesDiv.innerHTML += <div class='entry'><strong>Selected:</strong> ${entry.values.join(", ")}</div>;
+        }
+      });
+    }
+
+    function openFeedback() {
+      document.getElementById("overlay").classList.remove("hidden");
+      document.getElementById("feedbackModal").classList.remove("hidden");
+    }
+
+    function closeFeedback() {
+      document.getElementById("overlay").classList.add("hidden");
+      document.getElementById("feedbackModal").classList.add("hidden");
+    }
+
+    function submitFeedback() {
+      const name = document.getElementById("feedbackName").value;
+      const message = document.getElementById("feedbackMessage").value;
+      if (name && message) {
+        feedbacks.push({ name, message });
+        alert("Thanks for your feedback!");
+        document.getElementById("feedbackName").value = "";
+        document.getElementById("feedbackMessage").value = "";
+        closeFeedback();
+      } else {
+        alert("Please fill out both fields.");
+      }
+    }
+  </script></body>
+</html>
