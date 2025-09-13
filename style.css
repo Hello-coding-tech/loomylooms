@@ -1,0 +1,46 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7fafc;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+h1, h2 {
+    color: #4a5568;
+}
+form label {
+    display: block;
+    margin: 12px 0 4px 0;
+    color: #2d3748;
+}
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+button {
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #2b6cb0;
+}
+#successMsg {
+    color: green;
+    margin-top: 12px;
+    font-weight: bold;
+}
