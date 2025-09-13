@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header class="banner">
+        <img src="loomylooms-logo.png" alt="LoomyLooms Logo" class="logo">
+        <div class="banner-title">LoomyLooms</div>
+    </header>
     <div class="container">
         <h1>Admin Dashboard</h1>
         <div id="orderList">
@@ -16,7 +20,6 @@
     </div>
     <script src="orders.js"></script>
     <script>
-        // Show order list when admin.html is loaded
         window.onload = function() {
             loadOrders();
         }
